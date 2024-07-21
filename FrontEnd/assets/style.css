@@ -19,7 +19,7 @@ time, mark, audio, video {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	font-size: 100%;
+	font-size: 100%; 
 	font: inherit;
 	vertical-align: baseline;
 }
@@ -30,7 +30,9 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #FFFEF8;
 }
+
 ol, ul {
 	list-style: none;
 }
@@ -131,6 +133,7 @@ li:hover {
 	grid-template-columns: 1fr 1fr 1fr;
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
+	margin-top: 70px;
 }
 
 .gallery img {
@@ -183,6 +186,30 @@ input[type="submit"]{
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
+	background-color: #FFFFFF;
+	padding-bottom: 20px;
 }
+
+.Tfilter {
+	text-align: center;
+	margin-top: -252%;
+	margin-bottom: 40px;
+  }
+  
+  .filter {
+	cursor: pointer;
+	padding: 8px 20px;
+	color: #1d6154;
+	font-family: "Syne";
+	border-radius: 60px;
+	background-color: rgb(255, 254, 248);
+	border: 1px solid #1d6154;
+	margin: 0px 5px;
+	transition: 0.4s;
+  }
+  .filter:hover {
+	color: rgb(255, 254, 248);
+	background-color: #1d6154;
+  }
 
