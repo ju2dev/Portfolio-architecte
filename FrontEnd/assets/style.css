@@ -3,6 +3,16 @@
    License: none (public domain)
 */
 
+.syne {
+  font-family: "Syne", sans-serif;
+  font-style: normal;
+}
+
+.work {
+  font-family: "Work Sans", sans-serif;
+  font-style: normal;
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -27,7 +37,12 @@ time, mark, audio, video {
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
+	font-family: 'Work Sans' ;
+	font-size: 13px;
+	line-height: 15.25px;
+	font-weight: 300;
 }
+
 body {
 	line-height: 1;
 	background-color: #FFFEF8;
@@ -58,7 +73,8 @@ body {
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	margin: 50px 0;
+	align-items: center;
 }
 section {
 	margin: 50px 0
@@ -75,26 +91,40 @@ h1{
 
 h1 > span {
 	font-family: 'Work Sans';
-	font-size:10px;
+	font-size: 10px;
 	letter-spacing: 0.1em;
-;
+	font-weight: 400;
+	line-height: 11.73px;
+	padding-top: 5px;
 }
 
 h2{
 	font-family: 'Syne';
-	font-weight: 700;
+	font-weight: 600;
 	font-size: 30px;
-	color: #1D6154
+	color: #1D6154;
+	line-height: 36px;
 }
+
+nav {
+	align-items: center;
+}
+
 nav ul {
 	display: flex;
-	align-items: center;
 	list-style-type: none;
-
 }
+
 nav li {
-	padding: 0 10px;
+	padding: 0 20px;
 	font-size: 1.2em;
+	padding-top: 20px;
+	cursor: pointer;
+	font-family: 'Work Sans' ;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 16.42px;
+	padding-right: 20px;
 }
 
 li:hover {
@@ -122,6 +152,10 @@ li:hover {
 
 #introduction p {
 	margin-bottom: 0.5em;
+	font-family: 'Work Sans';
+	font-weight: 300;
+	font-size: 16px;
+	line-height: 18px;
 }
 #portfolio h2 {
 	text-align: center;
@@ -133,7 +167,7 @@ li:hover {
 	grid-template-columns: 1fr 1fr 1fr;
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
-	margin-top: 70px;
+	margin-top: 40px;
 }
 
 .gallery img {
@@ -142,14 +176,23 @@ li:hover {
 }
 #contact {
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
+
 #contact > * {
 	text-align: center;
-
+	font-family: 'Work Sans';
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 18.77px;
 }
+
 #contact h2{
 	margin-bottom: 20px;
+	font-family: 'Syne';
+	font-size: 30px;
+	font-weight: 700;
+	line-height: 36px;
 }
 #contact form {
 	text-align: left;
@@ -160,12 +203,17 @@ margin: auto;
 
 #contact input {
 	height: 50px;
-	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	cursor: pointer;
+	font-size: 16px;
 }
 #contact label {
 	margin: 2em 0 1em 0;
+	font-family: 'Work Sans';
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 16.42px;
 }
 #contact textarea {
 	border: none;
@@ -174,27 +222,31 @@ margin: auto;
 
 input[type="submit"]{
 	font-family: 'Syne';
-	font-weight: 700;
+	font-weight: 600;
 	color: white;
 	background-color: #1D6154;
 	margin : 2em auto ;
-	width: 180px;
+	width: 179px;
 	text-align: center;
 	border-radius: 60px ;
+	font-size: 14px;
+	line-height: 16.8px;
 }
 
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em;
-	background-color: #FFFFFF;
+	background-color: white;
 	padding-bottom: 20px;
+	width: 1438px;
+	position: relative;
+	right: 149px;
 }
 
 .Tfilter {
 	text-align: center;
-	margin-top: -252%;
 	margin-bottom: 40px;
+	display: block
   }
   
   .filter {
@@ -207,9 +259,37 @@ footer nav ul {
 	border: 1px solid #1d6154;
 	margin: 0px 5px;
 	transition: 0.4s;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 19.2px;
   }
+  
   .filter:hover {
 	color: rgb(255, 254, 248);
 	background-color: #1d6154;
   }
+  
+  .filter:active {
+    background-color: #1D6154;
+    color: white;
+}
 
+.selected {
+    background-color: #1D6154;
+    color: white;
+}
+
+nav ul a {
+    text-decoration: none;
+	color: inherit;
+	font-family: 'Work Sans';
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 18px;
+}
+
+.Insta {
+    width: 22px;
+	height: 22px;
+	font-size: bold;
+}
