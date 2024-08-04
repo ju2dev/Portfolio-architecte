@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const gallery = document.querySelector(".gallery");
+    const btnModifier = document.getElementById('btn-modifier');
+    const editModal = document.getElementById('edit-modal');
     let allWorks = [];
 
     // Étape 1: Récupérer les données de l'API et afficher les images
@@ -9,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             allWorks = works;
             displayWorks(works);
             createFilters(works);
+            updateLoginLogoutLink(); // Mettre à jour le lien de connexion/déconnexion après la création des filtres
         })
         .catch(error => console.error('Erreur lors de la récupération des travaux:', error));
 
@@ -48,19 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        //!!Ajout divF au DOM, juste avant la galerie!!
+        // Ajouter divF au DOM, juste avant la galerie
         gallery.parentNode.insertBefore(divF, gallery);
 
         // Ajouter des écouteurs d'événements aux filtres
         const filterList = document.querySelectorAll(".filter");
         filterList.forEach((filterCategory) => {
             filterCategory.addEventListener("click", function () {
-
-        // Enlever la classe "selected" de tous les filtres
-        filterList.forEach((btn) => btn.classList.remove("selected"));
-        
-        // Ajouter la classe "selected" au filtre cliqué
-        this.classList.add("selected");
+                // Enlever la classe "selected" de tous les filtres
+                filterList.forEach((btn) => btn.classList.remove("selected"));
+                
+                // Ajouter la classe "selected" au filtre cliqué
+                this.classList.add("selected");
 
                 const category = this.textContent;
                 let filteredWorks;
@@ -83,31 +85,25 @@ document.addEventListener('DOMContentLoaded', () => {
         filter.textContent = contenu;
         parent.appendChild(filter);
     }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    function checkLoginStatus() {
-        const token = localStorage.getItem('token');
-        const editControls = document.getElementById('edit-controls');
-        if (token && editControls) {
-            editControls.style.display = 'block';
-        }
-    }
-
-    checkLoginStatus();
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const loginLogoutLink = document.getElementById('loginLogoutLink');
 
     function updateLoginLogoutLink() {
+        const loginLogoutLink = document.getElementById('loginLogoutLink');
+        const Tfilter = document.querySelector('.Tfilter');
+        const btnModifier = document.getElementById('btn-modifier');
+
+        if (!loginLogoutLink || !Tfilter) return;
+
         const token = localStorage.getItem('token');
         if (token) {
             loginLogoutLink.textContent = 'logout';
             loginLogoutLink.onclick = logout;
+            Tfilter.style.display = 'none'; // Cacher les filtres quand connecté
+            btnModifier.classList.remove('hidden');
         } else {
             loginLogoutLink.textContent = 'login';
             loginLogoutLink.onclick = navigateToLogin;
+            Tfilter.style.display = ''; // Afficher les filtres quand déconnecté
+            btnModifier.classList.add('hidden');
         }
     }
 
@@ -118,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateLoginLogoutLink();
         updateUIForLoggedOutState();
     }
-    
+
     function updateUIForLoggedOutState() {
         // Mise à jour l'interface utilisateur ici sans recharger la page
         const editControls = document.getElementById('edit-controls');
@@ -132,6 +128,23 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '../FrontEnd/login/login.html';
     }
 
-    // Mettre à jour le lien au chargement de la page
-    updateLoginLogoutLink();
+    btnModifier.addEventListener('click', () => {
+        editModal.classList.remove('hidden');
+    });
+
+    function checkLoginStatus() {
+        const token = localStorage.getItem('token');
+        const editControls = document.getElementById('edit-controls');
+        if (token && editControls) {
+            editControls.style.display = 'block';
+        }
+    }
+
+    // Mettre à jour le lien de connexion/déconnexion après la création des filtres
+    document.addEventListener('DOMContentLoaded', () => {
+        checkLoginStatus();
+        updateLoginLogoutLink();
+    });
 });
+
+
