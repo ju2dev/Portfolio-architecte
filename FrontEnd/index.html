@@ -18,6 +18,11 @@
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
+			<div id="bandeau-noir" class="hidden">
+				<div class="texte">
+				<i class="fa-regular fa-pen-to-square" style="color:white;"></i>
+				Mode édition</div>
+				</div>
 			<li><a href="#">projets</a></li>
 			<li><a href="#">contact</a></li>
 			<li><a href="./login/login.html" id="loginLogoutLink">login</a></li>
@@ -38,7 +43,20 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<div class="header-container">
+			<h2>Mes Projets</h2>
+			<button id="btn-modifier" class="hidden">
+				<i class="fa-regular fa-pen-to-square" style="color: #000000;"></i>
+				modifier
+			</button>
+			<div id="edit-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h2>Galerie Photo</h2>
+                    <button id="add-photo">Ajouter une photo</button>
+                    <button id="close-modal">X</button>
+				</div>
+			</div>
+		</div>
 		<div class="gallery">
 			<script src="main.js" defer></script>
 		</div>
