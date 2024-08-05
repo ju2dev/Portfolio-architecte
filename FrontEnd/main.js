@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const gallery = document.querySelector(".gallery");
-    const btnModifier = document.getElementById('btn-modifier');
+    const bandeauNoir = document.getElementById('bandeau-noir');
     const editModal = document.getElementById('edit-modal');
+    const closeModal = document.getElementById('close-modal');
+    const btnModifier = document.getElementById('btn-modifier');
     let allWorks = [];
 
     // Étape 1: Récupérer les données de l'API et afficher les images
@@ -99,11 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
             loginLogoutLink.onclick = logout;
             Tfilter.style.display = 'none'; // Cacher les filtres quand connecté
             btnModifier.classList.remove('hidden');
+            bandeauNoir.classList.remove('hidden');
         } else {
             loginLogoutLink.textContent = 'login';
             loginLogoutLink.onclick = navigateToLogin;
             Tfilter.style.display = ''; // Afficher les filtres quand déconnecté
             btnModifier.classList.add('hidden');
+            bandeauNoir.classList.add('hidden');
         }
     }
 
@@ -128,9 +132,22 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '../FrontEnd/login/login.html';
     }
 
-    btnModifier.addEventListener('click', () => {
-        editModal.classList.remove('hidden');
-    });
+    if (btnModifier) {
+        btnModifier.addEventListener('click', () => {
+            console.log("Modifier button clicked");
+            editModal.classList.remove('hidden');
+            editModal.style.display = 'block'; // Afficher la modal
+        });
+    } else {
+        console.error('btnModifier is null');
+    }
+
+    if (closeModal) {
+        closeModal.addEventListener('click', () => {
+            editModal.classList.add('hidden');
+            editModal.style.display = 'none'; // Masquer la modal
+        });
+    }
 
     function checkLoginStatus() {
         const token = localStorage.getItem('token');
