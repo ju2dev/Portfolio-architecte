@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const editModal = document.getElementById('edit-modal');
     const closeModal = document.getElementById('close-modal');
     const btnModifier = document.getElementById('btn-modifier');
+    const addPhoto = document.getElementById('add-photo')
     let allWorks = [];
 
     // Étape 1: Récupérer les données de l'API et afficher les images
@@ -132,22 +133,93 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '../FrontEnd/login/login.html';
     }
 
-    if (btnModifier) {
-        btnModifier.addEventListener('click', () => {
-            console.log("Modifier button clicked");
-            editModal.classList.remove('hidden');
-            editModal.style.display = 'block'; // Afficher la modal
+   
+    function displayWorksWithoutCaptions(works, container) {
+    // Vider le conteneur existant
+    container.innerHTML = '';
+    // Parcourir les données reçues et créer les images avec légende
+    works.forEach(work => {
+        const figure = document.createElement('figure');
+        const img = document.createElement('img');
+        const figcaption = document.createElement('figcaption');
+        img.src = work.imageUrl;
+        img.alt = work.title;
+        figure.appendChild(img);
+        figure.appendChild(figcaption);
+        container.appendChild(figure);
+
+        const deleteIcon = document.createElement('i');
+        deleteIcon.classList.add('fa-solid', 'fa-trash-can' , 'delete-icon');
+        deleteIcon.addEventListener('click', () => {
+            console.log(`Deleting work with ID: ${work.id}`);
+            supprimerTravail(work.id);
         });
-    } else {
-        console.error('btnModifier is null');
+    figure.appendChild(deleteIcon);
+    });
+}
+
+    function supprimerTravail(travailId) {
+        fetch(`http://localhost:5678/api/works/${travailId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+    .then(response => {
+        if (response.ok) {
+            console.log(`Le travail avec l'ID : ${travailId} a été supprimé.`);
+            allWorks = allWorks.filter(travail => travail.id !== travailId);
+            displayWorksInContainer(allWorks, document.querySelector('.modal-gallery'));
+        } else {
+            return response.json().then(data => {
+                console.error('Échec de la suppression du travail :', data);
+            });
+        }
+    })
+        .catch(error => console.error('Erreur :', error));
+}
+
+
+    // Afficher les works dans la modale
+        function displayWorksInModal() {
+            const modalGallery = document.querySelector('.modal-gallery');
+        if (modalGallery) {
+            displayWorksWithoutCaptions(allWorks, modalGallery);
+        }
     }
 
-    if (closeModal) {
-        closeModal.addEventListener('click', () => {
-            editModal.classList.add('hidden');
-            editModal.style.display = 'none'; // Masquer la modal
-        });
+    function openModal() {
+        editModal.classList.remove('hidden');
+        editModal.style.display = 'block';
+        document.body.classList.add('modal-open');
+        displayWorksInModal();
     }
+
+    function closeModalFunction() {
+        editModal.classList.add('hidden');
+        editModal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
+
+    if (btnModifier) {
+        btnModifier.addEventListener('click', openModal);
+    }   
+
+    if (closeModal) {
+        closeModal.addEventListener('click', closeModalFunction);
+    }
+
+    // Fermer la modale si on clique en dehors
+        window.onclick = function(event) {
+            if (event.target === editModal) {
+                closeModalFunction();
+            }
+        }
+
+    addPhoto.addEventListener('click', () => {
+        console.log('Ajouter une photo');
+  });
 
     function checkLoginStatus() {
         const token = localStorage.getItem('token');
