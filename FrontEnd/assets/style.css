@@ -237,10 +237,12 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	background-color: white;
-	padding-bottom: 20px;
-	width: 1438px;
-	position: relative;
-	right: 149px;
+	width: 100vw;
+	height: 60px;
+}
+
+footer {
+	margin-left: calc(-50vw + 50%);
 }
 
 .Tfilter {
@@ -365,12 +367,14 @@ nav ul a {
   }
   
 #close-modal {
-	float: right;
-	font-size: 10px;
-	font-weight: bold;
-	cursor: pointer;
-	position: relative;
-	bottom: 3300px;
+	position: absolute;
+    top: 20px;
+    right: 25px;
+    background: none;
+    border: none;
+    font-size: 21px;
+    cursor: pointer;
+	color: #000;
 }
 
 #add-photo {
@@ -385,8 +389,8 @@ nav ul a {
 	font-size: 14px;
 	line-height: 16.8px;
 	cursor: pointer;
-	margin-left: 28vh;
-	margin-top: 150px;
+	margin-left: 210px;
+	margin-top: 30px;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
@@ -432,4 +436,203 @@ nav ul a {
 	font-weight: 300;
 	line-height: 30.5px;
 	padding-top: 20px;
+}
+
+  #add-photo-modal p {
+	text-align: center;
+	font-size: 26px;
+	font-weight: 300;
+	line-height: 30.5px;
+	padding-top: 20px;
+  }
+    
+
+
+  .form-group2 {
+	width: 420px;
+	margin-top: 40px;
+  }
+
+  .form-group3 {
+	width: 420px;
+	margin-top: 20px;
+  }
+  
+  .form-group1 label {
+	display: block;
+	margin-bottom: 10px;
+	color: #3D3D3D;
+	position: relative;
+	bottom: 170px;
+  }
+  
+  .form-group2 input {
+	width: 90%;
+	padding: 20px;
+	border: none;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+	margin-top: 10px;
+	margin-left: 110px;
+  }
+
+  .form-group3 select  {
+	width: 100%;
+	padding: 20px;
+	border-radius: 5px;
+	background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+	padding-right: 30px;
+	appearance: none; /* Supprime l'apparence par défaut */
+	margin-top: 10px;
+	border: none;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	margin-left: 110px;
+  }
+
+  /* Supprime la flèche par défaut sur IE */
+.form-group3 select::-ms-expand {
+	display: none;
+  }
+  
+  #photo-upload {
+	display: none;
+  }
+  
+  #photo-upload + label {
+    background-color: #E8F1F6;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 169px;
+    cursor: pointer;
+	margin-top: 30px;
+	width: 420px;
+	margin-left: 110px;
+}
+
+#photo-upload + label::after {
+    content: "+ Ajouter photo";
+    background-color: #CBD6DC;
+    color: #306685;
+    padding: 10px 33px;
+    border-radius: 50px;
+    margin-bottom: 7px;
+}
+  
+  #close-add-photo-modal {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    background: none;
+    border: none;
+    font-size: 21px;
+    cursor: pointer;
+	color: #000;
+}
+
+#retour-modal {
+    position: absolute;
+    top: 20px;
+    left: 25px;
+    background: none;
+    border: none;
+    font-size: 21px;
+    cursor: pointer;
+	color: #000;
+}
+
+  .modal-content1 {
+	position: absolute; 
+    top: 28%;
+    left: 50%; /* Centre horizontalement */
+    transform: translate(-50%, -50%); /* Ajuste le centrage */
+	background-color: white;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 630px;
+	height: 80vh;
+	overflow-y: auto;
+	border-radius: 8px;
+  }
+
+  #add-photo1 {
+	font-family: 'Syne';
+	font-weight: 600;
+	color: white;
+	background-color: #A7A7A7;
+	width: 237px;
+	height: 36px;
+	text-align: center;
+	border-radius: 60px;
+	font-size: 14px;
+	line-height: 16.8px;
+	cursor: pointer;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	margin-left: 210px;
+	margin-top: 30px;
+}
+
+#add-photo1:hover {
+	background-color: #1D6154;
+}
+
+#p1 {
+    font-family: 'Work Sans';
+	font-size: 10px;
+	position: relative;
+	top: 120px;
+	z-index: 10;
+}
+
+.form-group2 label {
+    font-family: 'Work Sans';
+	font-size: 14px;
+	z-index: 10;
+	font-weight: 500;
+	margin-left: 110px;
+}
+
+.form-group3 label {
+    font-family: 'Work Sans';
+	font-size: 14px;
+	z-index: 10;
+	font-weight: 500;
+	margin-left: 110px;
+}
+
+.underline {
+    border-bottom: 1px solid #B3B3B3;
+	padding-top: 60px;
+	width: 420px;
+	margin-left: 115px;
+}
+
+.underline1 {
+    border-bottom: 1px solid #B3B3B3;
+	padding-top: 150px;
+	width: 420px;
+	margin-left: 115px;
+}
+
+#photo-preview {
+    max-width: 15%;
+	height: auto;
+	position: relative;
+	bottom: 30px;
+}
+
+.hide-upload::before , .hide-upload::after {
+     display: none;
+   }
+
+/* Styles pour les petits écrans (mobiles) */
+@media (max-width: 440px) {
+   nav li {
+	padding-right: 0;
+}
 }
