@@ -54,8 +54,35 @@
                 <div class="modal-content">
                     <p>Galerie Photo</p>
 					<div class="modal-gallery"></div>
+					<div class="underline1"></div>
                     <button id="add-photo">Ajouter une photo</button>
-                    <button id="close-modal">X</button>
+                    <button id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+				</div>
+			</div>
+			<div id="add-photo-modal" class="modal hidden">
+				<div class="modal-content1">
+					<p>Ajout photo</p>
+						<form id="add-photo-form"></form>
+									<button type="submit" id="photo-upload">+ Ajouter photo</button>
+									<label for="photo-upload">
+										<h4 id="p1">jpg, png : 4mo max</h4>
+									<img id="photo-preview" src="/FrontEnd/assets/images/image-regular.svg" alt="Aperçu de l'image"/>
+									</label>
+									<input type="file" id="photo-upload" accept="image/*" required>
+									
+								<div class="form-group2">
+									<label for="photo-title">Titre</label>
+									<input type="text" id="photo-title" required>
+								</div>
+								<div class="form-group3">
+									<label for="photo-category">Catégorie</label>
+									<select id="photo-category" required></select>
+								</div>
+								<div class="underline"></div>
+								<button type="submit" id="add-photo1">Valider</button>
+
+							<button id="retour-modal"><i class="fa-solid fa-arrow-left"></i></button>
+							<button id="close-add-photo-modal"><i class="fa-solid fa-xmark"></i></button>
 				</div>
 			</div>
 		</div>
