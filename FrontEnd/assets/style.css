@@ -3,6 +3,7 @@
    License: none (public domain)
 */
 
+/* Styles généraux pour les polices */
 .syne {
   font-family: "Syne", sans-serif;
   font-style: normal;
@@ -80,6 +81,7 @@ section {
 	margin: 50px 0
 }
 
+/* Styles pour les titres */
 h1{
 	display: flex;
 	flex-direction: column;
@@ -106,6 +108,7 @@ h2{
 	line-height: 36px;
 }
 
+/* Styles pour la nav */
 nav {
 	align-items: center;
 }
@@ -131,6 +134,7 @@ li:hover {
 	font-weight: 500;
 }
 
+/* Styles pour la section d'introduction */
 #introduction {
 	display: flex;
 	align-items: center;
@@ -162,6 +166,7 @@ li:hover {
 	text-align: center;
 }
 
+/* Styles pour la galerie */
 .gallery {
 	width: 100%;
 	display: grid;
@@ -175,6 +180,8 @@ li:hover {
 	width: 100%;
 
 }
+
+/* Styles pour la section de contact */
 #contact {
 	width: 50%;
 	margin: auto;
@@ -234,6 +241,7 @@ input[type="submit"]{
 	line-height: 16.8px;
 }
 
+/* Styles pour le pied de page */
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
@@ -246,12 +254,14 @@ footer {
 	margin-left: calc(-50vw + 50%);
 }
 
+/* Styles pour les filtres */
 .Tfilter {
 	text-align: center;
 	margin-top: 20px;
 	display: block
   }
   
+/* Styles pour les boutons de filtre */
   .filter {
 	cursor: pointer;
 	padding: 8px 20px;
@@ -273,6 +283,7 @@ footer {
   }
   
   .filter:active {
+/* Styles pour les filtres actifs ou sélectionnés */
     background-color: #1D6154;
     color: white;
 }
@@ -282,6 +293,7 @@ footer {
     color: white;
 }
 
+/* Styles pour les liens dans la navigation */
 nav ul a {
     text-decoration: none;
 	color: inherit;
@@ -290,6 +302,7 @@ nav ul a {
 	line-height: 18px;
 }
 
+/* Styles pour l'icône Instagram */
 .Insta {
     width: 22px;
 	height: 22px;
@@ -300,6 +313,7 @@ nav ul a {
     display: none;
 }
 
+/* Styles pour le conteneur d'en-tête (titre + bouton modifier) */
 .header-container {
     display: flex;
     align-items: center;
@@ -313,7 +327,7 @@ nav ul a {
     margin: 0; 
 }
 
-/* Styles pour le bouton */
+/* Styles pour le bouton "modifier" */
 #btn-modifier {
     align-items: center;
     padding: 8px 40px;
@@ -325,6 +339,7 @@ nav ul a {
     text-decoration: none;
 }
 
+/* Styles pour le mode édition */
 #bandeau-noir {
     width: 100%;
     height: 50px; 
@@ -341,6 +356,7 @@ nav ul a {
 	margin-top: 20px;
 }
 
+/* Styles pour les modales */
 #edit-modal.modal {
 	position: fixed;
 	z-index: 1000;
@@ -351,6 +367,7 @@ nav ul a {
 	background-color: rgba(0,0,0,0.4);
   }
 
+  /* Styles pour le contenu des modales */
   .modal-content {
 	margin-left: 25%;
     margin-top: 5%;
@@ -362,7 +379,8 @@ nav ul a {
 	overflow-y: auto;
 	border-radius: 8px;
   }
-  
+ 
+ /* Styles pour les boutons de fermeture et de retour des modales */ 
 #close-modal {
 	position: fixed;
   	top: 20px;
@@ -375,6 +393,7 @@ nav ul a {
   	margin-top: 70px;
 }
 
+/* Styles pour les boutons d'ajout de photo */
 #add-photo {
 	font-family: 'Syne';
 	font-weight: 600;
@@ -399,6 +418,7 @@ nav ul a {
 	height: 102.57px;
 }
 
+/* Styles pour la galerie dans la modale */
 .modal-gallery {
     display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
@@ -445,8 +465,7 @@ nav ul a {
 	padding-top: 20px;
   }
     
-
-
+  /* Styles pour le formulaire d'ajout de photo */
   .form-group2 {
 	width: 420px;
 	margin-top: 40px;
@@ -465,6 +484,7 @@ nav ul a {
 	bottom: 170px;
   }
   
+  /* Styles pour les éléments de formulaire */
   .form-group2 input {
 	width: 90%;
 	padding: 20px;
@@ -475,6 +495,7 @@ nav ul a {
 	margin-left: 110px;
   }
 
+  /* Styles pour les éléments de formulaire */
   .form-group3 select  {
 	width: 100%;
 	padding: 20px;
@@ -495,10 +516,12 @@ nav ul a {
 	display: none;
   }
   
+  /* Styles pour l'upload de photo */
   #photo-upload {
 	display: none;
   }
   
+  /* Styles pour le formulaire d'ajout de photo */
   #photo-upload + label {
     background-color: #E8F1F6;
     border-radius: 3px;
@@ -521,7 +544,8 @@ nav ul a {
     border-radius: 50px;
     margin-bottom: 7px;
 }
-  
+ 
+/* Styles pour les boutons de fermeture et de retour des modales */
   #close-add-photo-modal {
     position: absolute;
     top: 20px;
@@ -533,6 +557,7 @@ nav ul a {
 	color: #000;
 }
 
+/* Styles pour les boutons de fermeture et de retour des modales */
 #retour-modal {
     position: absolute;
     top: 20px;
@@ -554,6 +579,7 @@ nav ul a {
 	background-color: rgba(0,0,0,0.4);
   }
 
+  /* Styles pour le contenu des modales */
   .modal-content1 {
 	position: absolute; 
     right: 20px;
@@ -568,6 +594,7 @@ nav ul a {
 	border-radius: 8px;
   }
 
+  /* Styles pour les boutons d'ajout de photo */
   #add-photo1 {
 	font-family: 'Syne';
 	font-weight: 600;
@@ -614,6 +641,7 @@ nav ul a {
 	margin-left: 110px;
 }
 
+/* Styles pour les séparateurs */
 .underline {
     border-bottom: 1px solid #B3B3B3;
 	padding-top: 60px;
@@ -621,6 +649,7 @@ nav ul a {
 	margin-left: 115px;
 }
 
+/* Styles pour les séparateurs */
 .underline1 {
     border-bottom: 1px solid #B3B3B3;
   	padding-top: 100px;
@@ -628,11 +657,11 @@ nav ul a {
   	margin-left: 115px;
 }
 
+/* Styles pour l'aperçu de la photo */
 #photo-preview {
     max-width: 15%;
 	height: auto;
 	position: relative;
-	bottom: 30px;
 }
 
 .hide-upload::before , .hide-upload::after {
