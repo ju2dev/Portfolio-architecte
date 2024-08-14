@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login-form');
     const errorMessage = document.getElementById('error-message');
     
-
+    // On écoute l'événement de soumission du formulaire
     loginForm.addEventListener('submit', function(e) {
+        // On empêche le comportement par défaut du formulaire
         e.preventDefault();
 
+         // On récupère les valeurs des champs email et mot de passe
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
@@ -29,13 +31,16 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify({ email, password })
         })
         .then(response => {
+             // Si la réponse n'est pas ok, on lance une erreur
             if (!response.ok) {
                 throw new Error('Erreur de connexion');
             }
+             // Sinon, on retourne les données JSON
             return response.json();
         })
         .then(data => {
-            // Connexion réussie
+            // La connexion a réussi
+            // On cache le message d'erreur
             errorMessage.style.display = 'none';
             console.log('Connexion réussie:', data);
 
@@ -53,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             // Échec de la connexion
             console.error('Erreur:', error);
+             // On affiche un message d'erreur à l'utilisateur
             errorMessage.textContent = 'Email ou mot de passe incorrect';
             errorMessage.style.display = 'block';
         });
