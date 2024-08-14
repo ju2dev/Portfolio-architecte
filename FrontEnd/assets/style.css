@@ -128,8 +128,9 @@ nav li {
 }
 
 li:hover {
-	color: #B1663C;
+	font-weight: 500;
 }
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -247,7 +248,7 @@ footer {
 
 .Tfilter {
 	text-align: center;
-	margin-bottom: 40px;
+	margin-top: 20px;
 	display: block
   }
   
@@ -285,7 +286,6 @@ nav ul a {
     text-decoration: none;
 	color: inherit;
 	font-family: 'Work Sans';
-	font-weight: 400;
 	font-size: 16px;
 	line-height: 18px;
 }
@@ -341,22 +341,19 @@ nav ul a {
 	margin-top: 20px;
 }
 
-.modal {
-	position: absolute;
+#edit-modal.modal {
+	position: fixed;
 	z-index: 1000;
 	left: 0;
 	top: 0;
 	width: 100%;
-	height: 395vh;
+	height: 100%;
 	background-color: rgba(0,0,0,0.4);
-	overflow: visible;
   }
 
   .modal-content {
-	position: absolute; 
-    top: 28%;
-    left: 50%; /* Centre horizontalement */
-    transform: translate(-50%, -50%); /* Ajuste le centrage */
+	margin-left: 25%;
+    margin-top: 5%;
 	background-color: white;
 	padding: 20px;
 	border: 1px solid #888;
@@ -367,14 +364,15 @@ nav ul a {
   }
   
 #close-modal {
-	position: absolute;
-    top: 20px;
-    right: 25px;
-    background: none;
-    border: none;
-    font-size: 21px;
-    cursor: pointer;
-	color: #000;
+	position: fixed;
+  	top: 20px;
+  	right: 30%;
+  	background: none;
+  	border: none;
+  	font-size: 21px;
+  	cursor: pointer;
+  	color: #000;
+  	margin-top: 70px;
 }
 
 #add-photo {
@@ -393,6 +391,7 @@ nav ul a {
 	margin-top: 30px;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	margin-bottom: 30px;
 }
 
 .modal-gallery img {
@@ -545,16 +544,26 @@ nav ul a {
 	color: #000;
 }
 
+#add-photo-modal {
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.4);
+  }
+
   .modal-content1 {
 	position: absolute; 
-    top: 28%;
-    left: 50%; /* Centre horizontalement */
+    right: 20px;
+    margin-top: 27%;
     transform: translate(-50%, -50%); /* Ajuste le centrage */
 	background-color: white;
 	padding: 20px;
 	border: 1px solid #888;
 	width: 630px;
-	height: 80vh;
+	height: 85vh;
 	overflow-y: auto;
 	border-radius: 8px;
   }
@@ -614,9 +623,9 @@ nav ul a {
 
 .underline1 {
     border-bottom: 1px solid #B3B3B3;
-	padding-top: 150px;
-	width: 420px;
-	margin-left: 115px;
+  	padding-top: 100px;
+  	width: 420px;
+  	margin-left: 115px;
 }
 
 #photo-preview {
