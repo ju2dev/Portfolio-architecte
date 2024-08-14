@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addPhoto = document.getElementById('add-photo')
     let allWorks = [];
 
+
     // Étape 1: Récupérer les données de l'API et afficher les images
     fetch('http://localhost:5678/api/works')
         .then(response => response.json())
@@ -311,9 +312,9 @@ console.error('Erreur:', error);
         checkLoginStatus();
         updateLoginLogoutLink();
     });
+    
 });
 
-// Assurez-vous que tous les éléments existent
 const addPhotoForm = document.getElementById('add-photo-form');
 const photoUploadButton = document.getElementById('photo-upload');
 const label = document.querySelector('label[for="photo-upload"]');
@@ -382,8 +383,7 @@ addPhotoForm.addEventListener('submit', async (e) => {
             body: formData
         });
 
-        console.log(localStorage.getItem('token'));
-
+        console.log("Token:", localStorage.getItem('token'));
 
         if (response.ok) {
             const newWork = await response.json();
@@ -392,6 +392,7 @@ addPhotoForm.addEventListener('submit', async (e) => {
             addPhotoModal.style.display = 'none';
             editModal.style.display = 'block';
             addPhotoForm.reset();
+            displayWorksInModal(allWorks);
             resetPhotoPreview();
         } else {
             const errorData = await response.json();
@@ -400,6 +401,11 @@ addPhotoForm.addEventListener('submit', async (e) => {
     } catch (error) {
         console.error('Erreur:', error);
     }
+
+    // Supprime le token au chargement de la page
+    localStorage.removeItem('token');
+    updateLoginLogoutLink(); // Met à jour le lien de connexion/déconnexion
+
 });
 
 // Fonction pour réinitialiser l'aperçu de la photo
@@ -412,3 +418,4 @@ function resetPhotoPreview() {
     }
     photoInput.value = '';
 }
+
