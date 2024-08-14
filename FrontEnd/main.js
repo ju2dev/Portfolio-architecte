@@ -19,10 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Erreur lors de la récupération des travaux:', error));
 
+    // Fonction pour afficher les travaux dans la galerie
     function displayWorks(works) {
         // Vider la galerie existante
         gallery.innerHTML = '';
-        // Parcourir les données reçues et créer les images avec légende
+         // Pour chaque travail, on crée une figure avec une image et une légende
         works.forEach(work => {
             const figure = document.createElement('figure');
             const img = document.createElement('img');
@@ -96,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         parent.appendChild(filter);
     }
 
+    // Fonction pour mettre à jour le lien de connexion/déconnexion
     function updateLoginLogoutLink() {
         const loginLogoutLink = document.getElementById('loginLogoutLink');
         const Tfilter = document.querySelector('.Tfilter');
@@ -105,12 +107,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const token = localStorage.getItem('token');
         if (token) {
+            // Si l'utilisateur est connecté
             loginLogoutLink.textContent = 'logout';
             loginLogoutLink.onclick = logout;
             Tfilter.style.display = 'none'; // Cacher les filtres quand connecté
             btnModifier.classList.remove('hidden');
             bandeauNoir.classList.remove('hidden');
         } else {
+             // Si l'utilisateur n'est pas connecté
             loginLogoutLink.textContent = 'login';
             loginLogoutLink.onclick = navigateToLogin;
             Tfilter.style.display = ''; // Afficher les filtres quand déconnecté
@@ -119,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Fonction de déconnexion
     function logout(e) {
         e.preventDefault();
         localStorage.removeItem('token');
@@ -127,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUIForLoggedOutState();
     }
 
+    // Mise à jour de l'interface pour l'état déconnecté
     function updateUIForLoggedOutState() {
         // Mise à jour l'interface utilisateur ici sans recharger la page
         const editControls = document.getElementById('edit-controls');
@@ -135,12 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+     // Navigation vers la page de connexion
     function navigateToLogin(e) {
         e.preventDefault();
         window.location.href = '../FrontEnd/login/login.html';
     }
 
-   
+   // Affichage des travaux sans légendes (pour la modale)
     function displayWorksWithoutCaptions(works, container) {
     // Vider le conteneur existant
     container.innerHTML = '';
@@ -155,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         figure.appendChild(figcaption);
         container.appendChild(figure);
 
+        // Ajout de l'icône de suppression
         const deleteIcon = document.createElement('i');
         deleteIcon.classList.add('fa-solid', 'fa-trash-can' , 'delete-icon');
         deleteIcon.addEventListener('click', () => {
@@ -165,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 }
 
+     // Fonction pour supprimer un travail
     function supprimerTravail(travailId) {
         fetch(`http://localhost:5678/api/works/${travailId}`, {
             method: 'DELETE',
@@ -196,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Ouverture de la modale
     function openModal() {
         editModal.classList.remove('hidden');
         editModal.style.display = 'block';
@@ -203,12 +213,14 @@ document.addEventListener('DOMContentLoaded', () => {
         displayWorksInModal();
     }
 
+    // Fermeture de la modale
     function closeModalFunction() {
         editModal.classList.add('hidden');
         editModal.style.display = 'none';
         document.body.classList.remove('modal-open');
     }
 
+    // Ajout des écouteurs d'événements pour ouvrir/fermer la modale
     if (btnModifier) {
         btnModifier.addEventListener('click', openModal);
     }   
@@ -224,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-    
+     // Gestion de la modale d'ajout de photo
     const addPhotoModal = document.getElementById('add-photo-modal');
     const closeAddPhotoModal = document.getElementById('close-add-photo-modal');
     const retourmodal = document.getElementById("retour-modal")
@@ -250,12 +262,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 };
 
-
+    // Retour à la modale d'édition
     retourmodal.addEventListener('click', () => {
         addPhotoModal.style.display = 'none';
         editModal.style.display = 'block';
 });
 
+    // Remplissage du select des catégories
     function populateCategorySelect() {
         const categorySelect = document.getElementById('photo-category');
         categorySelect.innerHTML = '';
@@ -268,6 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 }
 
+     // Soumission du formulaire d'ajout de photo
     addPhoto.addEventListener('submit', async (e) => {
         e.preventDefault();
             const formData = new FormData();
@@ -299,6 +313,7 @@ console.error('Erreur:', error);
 }
 });
 
+     // Vérification du statut de connexion
     function checkLoginStatus() {
         const token = localStorage.getItem('token');
         const editControls = document.getElementById('edit-controls');
@@ -315,6 +330,7 @@ console.error('Erreur:', error);
     
 });
 
+// Gestion du formulaire d'ajout de photo
 const addPhotoForm = document.getElementById('add-photo-form');
 const photoUploadButton = document.getElementById('photo-upload');
 const label = document.querySelector('label[for="photo-upload"]');
@@ -323,18 +339,18 @@ const photoPreview = document.getElementById('photo-preview');
 const photoInput = document.createElement('input');
 const textp = document.getElementById('p1');
 
-// Initialisation de l'input pour l'upload de la photo
+// Configuration de l'input pour l'upload de photo
 photoInput.type = 'file';
 photoInput.accept = 'image/*';
 photoInput.style.display = 'none';
 
-// Événement pour le bouton d'upload de la photo
+// Ouverture de l'explorateur de fichiers au clic sur le bouton
 photoUploadButton.addEventListener('click', (e) => {
     e.preventDefault();
     photoInput.click();
 });
 
-// Événement pour l'aperçu de l'image sélectionnée
+// Prévisualisation de l'image sélectionnée
 photoInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -355,7 +371,7 @@ photoInput.addEventListener('change', (e) => {
     }
 });
 
-// Ajout de l'input de fichier dans le formulaire
+// Ajout de l'input de fichier au formulaire
 addPhotoForm.appendChild(photoInput);
 
 // Soumission du formulaire lorsque le bouton "Valider" est cliqué
@@ -365,9 +381,11 @@ validateButton.addEventListener('click', async (e) => {
     addPhotoForm.submit();
 });
 
-// Soumission du formulaire et envoi des données à l'API
+// Soumission du formulaire au clic sur "Valider" + envoi API
 addPhotoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Gestion de la soumission du formulaire
     const formData = new FormData();
     formData.append('image', photoInput.files[0]);
     formData.append('title', document.getElementById('photo-title').value);
@@ -408,14 +426,4 @@ addPhotoForm.addEventListener('submit', async (e) => {
 
 });
 
-// Fonction pour réinitialiser l'aperçu de la photo
-function resetPhotoPreview() {
-    photoPreview.src = '';
-    photoUploadButton.style.display = 'block';
-    textp.style.display = 'block';
-    if (label) {
-        label.classList.remove('hide-upload');
-    }
-    photoInput.value = '';
-}
 
