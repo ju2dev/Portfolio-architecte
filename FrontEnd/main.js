@@ -210,6 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editModal.classList.remove('hidden');
         editModal.style.display = 'block';
         document.body.classList.add('modal-open');
+        document.body.style.overflow = 'hidden'; // Empêche le défilement
         displayWorksInModal();
     }
 
@@ -218,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editModal.classList.add('hidden');
         editModal.style.display = 'none';
         document.body.classList.remove('modal-open');
+        document.body.style.overflow = ''; // Rétablit le défilement
     }
 
     // Ajout des écouteurs d'événements pour ouvrir/fermer la modale
@@ -245,12 +247,14 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Ajouter une photo');
         addPhotoModal.style.display = 'block';
         editModal.style.display = 'none'; // Cacher la modale d'édition
+        document.body.style.overflow = 'hidden'; // Empêche le défilement
         populateCategorySelect();
   });
 
    // Fermer la modale en cliquant sur le bouton de fermeture
         closeAddPhotoModal.addEventListener('click', () => {
             addPhotoModal.style.display = 'none';
+            document.body.style.overflow = ''; // Rétablit le défilement
 });
 
     // Fermer la modale si on clique en dehors
@@ -280,38 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
         categorySelect.appendChild(option);
 });
 }
-
-     // Soumission du formulaire d'ajout de photo
-    addPhoto.addEventListener('submit', async (e) => {
-        e.preventDefault();
-            const formData = new FormData();
-                formData.append('image', document.getElementById('photo-upload').files[0]);
-                formData.append('title', document.getElementById('photo-title').value);
-                formData.append('category', document.getElementById('photo-category').value);
-
-        try {
-            const response = await fetch('http://localhost:5678/api/works', {
-                method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-                body: formData
-});
-
-        if (response.ok) {
-            const newWork = await response.json();
-                allWorks.push(newWork);
-                displayWorks(allWorks);
-                displayWorksInModal();
-                addPhotoModal.style.display = 'none';
-                editModal.style.display = 'block';
-}       else {
-            console.error('Erreur lors ajout de la photo');
-}
-    } catch (error) {
-console.error('Erreur:', error);
-}
-});
 
      // Vérification du statut de connexion
     function checkLoginStatus() {
@@ -381,11 +353,11 @@ validateButton.addEventListener('click', async (e) => {
     addPhotoForm.submit();
 });
 
-// Soumission du formulaire au clic sur "Valider" + envoi API
+// Soumission du formulaire au clic sur "Valider" 
 addPhotoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Gestion de la soumission du formulaire
+    // Gestion de la soumission du formulaire + envoi API
     const formData = new FormData();
     formData.append('image', photoInput.files[0]);
     formData.append('title', document.getElementById('photo-title').value);
@@ -411,7 +383,7 @@ addPhotoForm.addEventListener('submit', async (e) => {
             editModal.style.display = 'block';
             addPhotoForm.reset();
             displayWorksInModal(allWorks);
-            resetPhotoPreview();
+            photoPreview();
         } else {
             const errorData = await response.json();
             console.error('Erreur lors ajout de la photo:', errorData);
