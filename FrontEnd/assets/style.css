@@ -583,7 +583,7 @@ nav ul a {
   .modal-content1 {
 	position: absolute; 
     right: 20px;
-    margin-top: 27%;
+    margin-top: 28%;
     transform: translate(-50%, -50%); /* Ajuste le centrage */
 	background-color: white;
 	padding: 20px;
