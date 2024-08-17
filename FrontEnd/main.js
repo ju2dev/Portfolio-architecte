@@ -343,47 +343,36 @@ photoInput.addEventListener('change', (e) => {
     }
 });
 
-// Ajout de l'input de fichier au formulaire
-addPhotoForm.appendChild(photoInput);
 
-// Soumission du formulaire lorsque le bouton "Valider" est cliqué
-const validateButton = document.getElementById('add-photo1');
-validateButton.addEventListener('click', async (e) => {
-    e.preventDefault();
-    addPhotoForm.submit();
-});
+    // Soumission du formulaire lorsque le bouton "Valider" est cliqué
+    const validateButton = document.getElementById('add-photo1');
+    validateButton.addEventListener('click', async (e) => {
+        e.preventDefault();    
 
-// Soumission du formulaire au clic sur "Valider" 
-addPhotoForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Gestion de la soumission du formulaire + envoi API
     const formData = new FormData();
     formData.append('image', photoInput.files[0]);
     formData.append('title', document.getElementById('photo-title').value);
     formData.append('category', document.getElementById('photo-category').value);
 
     try {
+        const token = localStorage.getItem('token');
+        console.log("Authorization token:", token); // Log authorization token
+
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${localStorage.getItem('token')}`   
             },
             
             body: formData
         });
 
-        console.log("Token:", localStorage.getItem('token'));
-
         if (response.ok) {
             const newWork = await response.json();
             allWorks.push(newWork);
             displayWorks(allWorks);
-            addPhotoModal.style.display = 'none';
-            editModal.style.display = 'block';
             addPhotoForm.reset();
             displayWorksInModal(allWorks);
-            photoPreview();
         } else {
             const errorData = await response.json();
             console.error('Erreur lors ajout de la photo:', errorData);
@@ -391,11 +380,6 @@ addPhotoForm.addEventListener('submit', async (e) => {
     } catch (error) {
         console.error('Erreur:', error);
     }
-
-    // Supprime le token au chargement de la page
-    localStorage.removeItem('token');
-    updateLoginLogoutLink(); // Met à jour le lien de connexion/déconnexion
-
 });
 
 
