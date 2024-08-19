@@ -354,6 +354,18 @@ photoInput.addEventListener('change', (e) => {
     formData.append('title', document.getElementById('photo-title').value);
     formData.append('category', document.getElementById('photo-category').value);
 
+    // Verification champs soient bien remplis
+    const error = document.getElementById('error');
+    if (!formData.get('image') || !formData.get('title') || !formData.get('category')) {
+        console.log("Erreur : Tous les champs ne sont pas remplis.");
+        error.textContent = "Veuillez remplir tous les champs.";
+        error.style.display = 'block';
+        error.style.color = 'red';
+        error.style.textAlign = 'center'
+        console.log("Message d'erreur après affichage:", error.textContent); 
+        return;
+    }
+
     try {
         const token = localStorage.getItem('token');
         console.log("Authorization token:", token); // Log authorization token
