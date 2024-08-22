@@ -261,3 +261,7 @@ footer nav ul li {
 	bottom: 4px;
 }
 
+#error-message {
+	display: none;
+	color: red;
+}
