@@ -408,7 +408,7 @@ validateButton.addEventListener('click', async (e) => {
         if (response.ok) {
             addPhotoForm.reset();
             photoPreview.src = '/FrontEnd/assets/images/image-regular.svg';
-            textp.style.display = 'block';
+            textp.style.display = 'none';
             errorDiv.style.display = 'none';
             imageFile = null;
         } else {
