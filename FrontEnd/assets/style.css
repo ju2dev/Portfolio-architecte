@@ -701,8 +701,21 @@ header nav li {
 	  height: auto;
 	  position: relative;
 	  right: 6px;
+	  display: none;
 	}
   
   .hide-upload::before , .hide-upload::after {
 	   display: none;
 	 }
+
+#bandeau-noir .fa-pen-to-square {
+	color: white;
+  }
+
+  #btn-modifier .fa-pen-to-square {
+	color: black;
+  }
+
+  #error {
+	display: none;
+  }
