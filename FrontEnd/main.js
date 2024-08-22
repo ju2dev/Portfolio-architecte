@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = document.getElementById('close-modal');
     const btnModifier = document.getElementById('btn-modifier');
     const addPhoto = document.getElementById('add-photo')
+    const modalOverlay = document.getElementById('edit-modal-overlay');
     let allWorks = [];
 
 
@@ -102,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const loginLogoutLink = document.getElementById('loginLogoutLink');
         const Tfilter = document.querySelector('.Tfilter');
         const btnModifier = document.getElementById('btn-modifier');
+        const header = document.querySelector('header');
 
         if (!loginLogoutLink || !Tfilter) return;
 
@@ -113,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Tfilter.style.display = 'none'; // Cacher les filtres quand connecté
             btnModifier.classList.remove('hidden');
             bandeauNoir.classList.remove('hidden');
+            header.style.margin ='70px 0px';
         } else {
              // Si l'utilisateur n'est pas connecté
             loginLogoutLink.textContent = 'login';
@@ -209,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function openModal() {
         editModal.classList.remove('hidden');
         editModal.style.display = 'block';
+        document.getElementById('edit-modal-overlay').classList.remove('hidden'); // Afficher le fond gris
         document.body.classList.add('modal-open');
         document.body.style.overflow = 'hidden'; // Empêche le défilement
         displayWorksInModal();
@@ -218,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeModalFunction() {
         editModal.classList.add('hidden');
         editModal.style.display = 'none';
+        document.getElementById('edit-modal-overlay').classList.add('hidden');
         document.body.classList.remove('modal-open');
         document.body.style.overflow = ''; // Rétablit le défilement
     }
@@ -231,40 +236,47 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal.addEventListener('click', closeModalFunction);
     }
 
-    // Fermer la modale si on clique en dehors
-        window.onclick = function(event) {
-            if (event.target === editModal) {
-                closeModalFunction();
-            }
-        }
+    modalOverlay.addEventListener('click', () => {
+        closeModalFunction(); // Ferme la modal
+      });
+    
 
      // Gestion de la modale d'ajout de photo
     const addPhotoModal = document.getElementById('add-photo-modal');
-    const closeAddPhotoModal = document.getElementById('close-add-photo-modal');
     const retourmodal = document.getElementById("retour-modal")
+    const addPhotoModalOverlay = document.getElementById('add-photo-modal-overlay');
+    const closeAddPhotoModal = document.getElementById('close-add-photo-modal');
 
     addPhoto.addEventListener('click', () => {
         console.log('Ajouter une photo');
         addPhotoModal.style.display = 'block';
+        addPhotoModalOverlay.classList.remove('hidden');
         editModal.style.display = 'none'; // Cacher la modale d'édition
         document.body.style.overflow = 'hidden'; // Empêche le défilement
+        modalOverlay.classList.add('hidden');
         populateCategorySelect();
   });
 
-   // Fermer la modale en cliquant sur le bouton de fermeture
-        closeAddPhotoModal.addEventListener('click', () => {
-            addPhotoModal.style.display = 'none';
-            document.body.style.overflow = ''; // Rétablit le défilement
+// Fermer la modale en cliquant sur le bouton de fermeture
+closeAddPhotoModal.addEventListener('click', () => {
+    addPhotoModal.style.display = 'none';
+    document.body.style.overflow = ''; // Rétablit le défilement
+    addPhotoModalOverlay.classList.add('hidden');
 });
 
-    // Fermer la modale si on clique en dehors
-        window.onclick = function(event) {
-            // Vérifie si l'élément cliqué est la modale
-            if (event.target === addPhotoModal) {
-                 // Ferme la modale en appelant la fonction closeModalFunction
-                 addPhotoModal.style.display = 'none';
-            }
-};
+  function closeAddPhotoModalFunction() {
+    addPhotoModalOverlay.classList.add('hidden');
+    addPhotoModal.style.display = 'none';
+    document.body.style.overflow = ''; // Réactive le défilement du body
+  }
+
+  if (closeModal) {
+    closeModal.addEventListener('click', closeAddPhotoModalFunction);
+}
+
+addPhotoModalOverlay.addEventListener('click', () => {
+    closeAddPhotoModalFunction(); // Ferme la modal
+  });
 
     // Retour à la modale d'édition
     retourmodal.addEventListener('click', () => {
@@ -274,13 +286,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Remplissage du select des catégories
     function populateCategorySelect() {
+        
+    const categories = [
+    { id: 1, name: "Objets" },
+    { id: 2, name: "Appartements" },
+    { id: 3, name: "Hotels & restaurants" }
+];
+
         const categorySelect = document.getElementById('photo-category');
         categorySelect.innerHTML = '';
-        const categories = [...new Set(allWorks.map(work => work.category.name))];
         categories.forEach(category => {
         const option = document.createElement('option');
-        option.value = category;
-        option.textContent = category;
+        option.value = category.id; 
+        option.textContent = category.name;
         categorySelect.appendChild(option);
 });
 }
@@ -302,96 +320,107 @@ document.addEventListener('DOMContentLoaded', () => {
     
 });
 
-// Gestion du formulaire d'ajout de photo
+// Sélection des éléments du DOM
 const addPhotoForm = document.getElementById('add-photo-form');
-const photoUploadButton = document.getElementById('photo-upload');
-const label = document.querySelector('label[for="photo-upload"]');
-const photoPreviewContainer = document.getElementById('photo-preview-container');
+const addPhotoButton = document.getElementById('photo-upload-btn');
+const photoInput = document.getElementById('photo-upload-input');
 const photoPreview = document.getElementById('photo-preview');
-const photoInput = document.createElement('input');
+const titleInput = document.getElementById('photo-title');
+const categorySelect = document.getElementById('photo-category');
+const validateButton = document.getElementById('add-photo1');
+const errorDiv = document.getElementById('error');
 const textp = document.getElementById('p1');
+const dynamicPhotoPreview = document.getElementById('dynamic-photo-preview');
+let imageFile = null; // Variable pour stocker le fichier image
 
-// Configuration de l'input pour l'upload de photo
-photoInput.type = 'file';
-photoInput.accept = 'image/*';
-photoInput.style.display = 'none';
+addPhotoButton.addEventListener('click', () => {
+    photoInput.click(); // Déclenche le clic sur l'input file
+  });
 
-// Ouverture de l'explorateur de fichiers au clic sur le bouton
-photoUploadButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    photoInput.click();
-});
-
-// Prévisualisation de l'image sélectionnée
 photoInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]; 
+    console.log("Fichier sélectionné:", file);
+    
     if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            photoPreview.src = e.target.result;
-            photoUploadButton.style.display = 'none';
-            textp.style.display = 'none';
-        };
-
-        if (label) {
-            label.classList.add('hide-upload');
+        if (file.size > 4 * 1024 * 1024) {
+            console.log("Erreur : Le fichier dépasse la taille maximale de 4 Mo.");
+            errorDiv.textContent = 'Le fichier dépasse la taille maximale de 4 Mo.';
+            errorDiv.style.display = 'block';
+            photoInput.value = ''; // Réinitialise le champ de fichier
+            imageFile = null;
+        } else {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                console.log("URL de l'image chargée:", e.target.result);
+                dynamicPhotoPreview.src = e.target.result;
+                dynamicPhotoPreview.style.display = 'block';
+                photoPreview.style.display = 'none';
+                textp.style.display = 'none';
+                errorDiv.style.display = 'none';
+                imageFile = file;
+                console.log("Fichier image stocké dans imageFile:", imageFile);
+            };
+            reader.readAsDataURL(file);
+            addPhotoButton.style.display = 'none';
         }
-
-        photoPreview.style.maxWidth = '90%';
-        photoPreview.style.height = '100%';
-        reader.readAsDataURL(file);
     }
-});
+  });
+  
 
+validateButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    
+    const title = titleInput.value;
+    const category = categorySelect.value; // Convertir en entier
+    console.log("Valeur brute de la catégorie:", categorySelect.value);
+    console.log("Valeur de la catégorie après conversion:", category);
 
-    // Soumission du formulaire lorsque le bouton "Valider" est cliqué
-    const validateButton = document.getElementById('add-photo1');
-    validateButton.addEventListener('click', async (e) => {
-        e.preventDefault();    
+    console.log("Valeur du titre:", title);
+    console.log("Valeur de la catégorie:", category);
+    console.log("Fichier image:", imageFile);
 
-    const formData = new FormData();
-    formData.append('image', photoInput.files[0]);
-    formData.append('title', document.getElementById('photo-title').value);
-    formData.append('category', document.getElementById('photo-category').value);
-
-    // Verification champs soient bien remplis
-    const error = document.getElementById('error');
-    if (!formData.get('image') || !formData.get('title') || !formData.get('category')) {
-        console.log("Erreur : Tous les champs ne sont pas remplis.");
-        error.textContent = "Veuillez remplir tous les champs.";
-        error.style.display = 'block';
-        error.style.color = 'red';
-        error.style.textAlign = 'center'
-        console.log("Message d'erreur après affichage:", error.textContent); 
+    
+    if (!imageFile || !title || isNaN(category)) {
+        console.log("Erreur : Tous les champs ne sont pas remplis correctement.");
+        errorDiv.textContent = "Veuillez remplir tous les champs.";
+        errorDiv.style.display = 'block';
+        errorDiv.style.color = 'red';
+        errorDiv.style.textAlign = 'center';
+        console.log("Message d'erreur après affichage:", errorDiv.textContent);
         return;
     }
 
-    try {
-        const token = localStorage.getItem('token');
-        console.log("Authorization token:", token); // Log authorization token
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('category', category);
+    formData.append('image', imageFile);
 
+    const token = localStorage.getItem('token');
+    try {
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`   
+                'Authorization': `Bearer ${token}`
             },
-            
             body: formData
         });
-
+        
         if (response.ok) {
-            const newWork = await response.json();
-            allWorks.push(newWork);
-            displayWorks(allWorks);
             addPhotoForm.reset();
-            displayWorksInModal(allWorks);
+            photoPreview.src = '/FrontEnd/assets/images/image-regular.svg';
+            textp.style.display = 'block';
+            errorDiv.style.display = 'none';
+            imageFile = null;
         } else {
-            const errorData = await response.json();
-            console.error('Erreur lors ajout de la photo:', errorData);
+            const errorText = await response.text();
+            console.error('Erreur lors de l’ajout de la photo:', errorText);
+            errorDiv.textContent = "Une erreur s'est produite lors de l'ajout de la photo.";
+            errorDiv.style.display = 'block';
         }
     } catch (error) {
         console.error('Erreur:', error);
+        errorDiv.textContent = "Une erreur s'est produite lors de la communication avec le serveur.";
+        errorDiv.style.display = 'block';
     }
+    console.log("Authorization token:", token);
 });
-
-
