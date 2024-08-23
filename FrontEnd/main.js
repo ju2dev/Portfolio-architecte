@@ -38,12 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-     // Mise à jour de la galerie dans la modale
-     const modalGallery = document.querySelector('.modal-gallery');
-        if (modalGallery) {
-            displayWorksWithoutCaptions(allWorks, modalGallery);
-     }
-
     // Fonction pour créer les filtres à partir des données récupérées
     function createFilters(works) {
         const divF = document.createElement("div");
@@ -220,6 +214,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Erreur :', error));
 }
 
+        // Mise à jour de la galerie dans la modale
+        const modalGallery = document.querySelector('.modal-gallery');
+            if (modalGallery) {
+            displayWorksWithoutCaptions(allWorks, modalGallery);
+        }
 
         // Afficher les travaux dans la modale
         function displayWorksInModal() {
