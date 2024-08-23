@@ -101,8 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function createFilter(balise, classes = [], contenu, parent) {
 
         let filter = document.createElement(balise);
-         // Ajouter chaque classe CSS fournie dans le tableau "classes" à l'élément créé
 
+         // Ajouter chaque classe CSS fournie dans le tableau "classes" à l'élément créé
         classes.forEach(classe => filter.classList.add(classe));
         filter.textContent = contenu;
         parent.appendChild(filter);
@@ -144,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function logout(e) {
         e.preventDefault(); // Empêcher le comportement par défaut du lien
         localStorage.removeItem('token'); // Supprimer le token du localStorage pour déconnecter l'utilisateur
-        console.log('Déconnexion réussie');
         updateLoginLogoutLink(); // Mettre à jour le lien de connexion/déconnexion pour refléter l'état déconnecté
         updateUIForLoggedOutState(); // Mettre à jour l'interface utilisateur pour l'état déconnecté
     }
@@ -189,7 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ajouter un écouteur d'événement "click" à l'icône de suppression
         deleteIcon.addEventListener('click', () => {
-            console.log(`Deleting work with ID: ${work.id}`);
             supprimerTravail(work.id); // Appeler fonction "supprimerTravail" ; passant l'ID travail à supp
         });
 
@@ -210,7 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(response => {
          // Vérif si la suppression a réussi
         if (response.ok) {
-            console.log(`Le travail avec l'ID : ${travailId} a été supprimé.`);
              // Mise à jour liste travaux supp élément avec l'ID correspondant
             allWorks = allWorks.filter(travail => travail.id !== travailId);
             displayWorksInContainer(allWorks, document.querySelector('.modal-gallery'));
@@ -228,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function displayWorksInModal() {
             const modalGallery = document.querySelector('.modal-gallery');
 
-        // Si galerie modale existe, afficher travaux sans légende
+        // Si galerie modale, afficher travaux sans légende
         if (modalGallery) {
             displayWorksWithoutCaptions(allWorks, modalGallery);
         }
@@ -278,7 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Ouvrir modale d'ajout de photo : clic sur bouton "Ajouter une photo"
     addPhoto.addEventListener('click', () => {
-        console.log('Ajouter une photo');
         addPhotoModal.style.display = 'block';
         addPhotoModalOverlay.classList.remove('hidden');
         editModal.style.display = 'none'; // Cacher la modale d'édition
@@ -294,21 +290,21 @@ document.addEventListener('DOMContentLoaded', () => {
         addPhotoModalOverlay.classList.add('hidden');
 });
 
+    // Fermer la modale d'ajout de photo en cliquant sur l'overlay
     function closeAddPhotoModalFunction() {
         addPhotoModalOverlay.classList.add('hidden');
         addPhotoModal.style.display = 'none';
         document.body.style.overflow = ''; // Réactive le défilement du body
   }
 
+   addPhotoModalOverlay.addEventListener('click', () => {
+    closeAddPhotoModalFunction(); // Ferme la modal
+});
+
   // Ajouter un écouteur d'événement au bouton de fermeture de la modale principale 
   if (closeModal) {
     closeModal.addEventListener('click', closeAddPhotoModalFunction);
 }
-
-    // Fermer la modale d'ajout de photo en cliquant sur l'overlay
-    addPhotoModalOverlay.addEventListener('click', () => {
-        closeAddPhotoModalFunction(); // Ferme la modal
-  });
 
     // Retour à la modale d'édition lorsque le bouton de retour est cliqué
     retourmodal.addEventListener('click', () => {
@@ -374,12 +370,10 @@ let imageFile = null; // Variable pour stocker le fichier image
     // Gestion du changement dans l'input file pour afficher l'aperçu de l'image sélectionnée
     photoInput.addEventListener('change', (e) => {
         const file = e.target.files[0]; 
-        console.log("Fichier sélectionné:", file);
     
     if (file) {
         // Vérification de la taille du fichier
         if (file.size > 4 * 1024 * 1024) {
-            console.log("Erreur : Le fichier dépasse la taille maximale de 4 Mo.");
             errorDiv.textContent = 'Le fichier dépasse la taille maximale de 4 Mo.';
             errorDiv.style.display = 'block';
             photoInput.value = ''; // Réinitialise le champ de fichier
@@ -388,14 +382,12 @@ let imageFile = null; // Variable pour stocker le fichier image
             // Si la taille est correcte, affiche aperçu de l'image
             const reader = new FileReader();
             reader.onload = function(e) {
-                console.log("URL de l'image chargée:", e.target.result);
                 dynamicPhotoPreview.src = e.target.result; // Mettre à jour l'aperçu avec l'image sélectionnée
                 dynamicPhotoPreview.style.display = 'block';
                 photoPreview.style.display = 'none';
                 textp.style.display = 'none';
                 errorDiv.style.display = 'none';
                 imageFile = file; // Stocker le fichier image
-                console.log("Fichier image stocké dans imageFile:", imageFile);
             };
             reader.readAsDataURL(file); // Lire le contenu du fichier pour l'aperçu
             addPhotoButton.style.display = 'none'; // Cacher le bouton de chargement après sélection
@@ -409,21 +401,13 @@ let imageFile = null; // Variable pour stocker le fichier image
     
     const title = titleInput.value;
     const category = categorySelect.value; // Convertir en entier
-    console.log("Valeur brute de la catégorie:", categorySelect.value);
-    console.log("Valeur de la catégorie après conversion:", category);
-
-    console.log("Valeur du titre:", title);
-    console.log("Valeur de la catégorie:", category);
-    console.log("Fichier image:", imageFile);
 
      // Vérification que tous les champs sont remplis correctement
     if (!imageFile || !title || isNaN(category)) {
-        console.log("Erreur : Tous les champs ne sont pas remplis correctement.");
         errorDiv.textContent = "Veuillez remplir tous les champs.";
         errorDiv.style.display = 'block';
         errorDiv.style.color = 'red';
         errorDiv.style.textAlign = 'center';
-        console.log("Message d'erreur après affichage:", errorDiv.textContent);
         return; // Arrête la fonction si les champs ne sont pas remplis correctement
     }
 
@@ -462,5 +446,4 @@ let imageFile = null; // Variable pour stocker le fichier image
         errorDiv.textContent = "Une erreur s'est produite lors de la communication avec le serveur.";
         errorDiv.style.display = 'block';
     }
-    console.log("Authorization token:", token);
 });
