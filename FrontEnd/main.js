@@ -63,41 +63,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fonction pour créer les filtres à partir des catégories et les ajouter au DOM
     function createFilters(categories) {
         const filterContainer = document.createElement("div");
         filterContainer.classList.add("Tfilter");
-
-    // Crée un filtre "Tous" pour afficher tous les travaux
-    createFilterButton("Tous", filterContainer, null);
     
-    // Crée un bouton de filtre pour chaque catégorie
-    categories.forEach(category => createFilterButton(category.name, filterContainer, category.id));
-
-    // Ajoute les filtres juste avant la galerie dans le DOM
-    const gallery = document.querySelector(".gallery");
-        gallery.parentNode.insertBefore(filterContainer, gallery);
-
-    // Ajoute les listeners pour gérer les clics sur les filtres
-    document.querySelectorAll(".filter").forEach(btn => {
-        btn.addEventListener("click", function () {
-            // Enlève la classe "selected" de tous les filtres puis l'ajoute à celui qui est cliqué
-            document.querySelectorAll(".filter").forEach(btn => btn.classList.remove("selected"));
-            this.classList.add("selected");
-            fetchWorksByCategory(this.dataset.categoryId || null); // Récupère les travaux selon le filtre
+        // Crée un tableau avec "Tous" et toutes les catégories
+        const allFilters = [{ name: "Tous", id: null }].concat(categories);
+    
+        // Crée un bouton de filtre pour "Tous" et chaque catégorie
+        allFilters.forEach((filter, index) => {
+            const button = document.createElement("button");
+            button.classList.add("filter");
+            button.textContent = filter.name;
+            if (filter.id !== null) button.dataset.categoryId = filter.id;
+            if (index === 0) button.classList.add("selected"); // Le premier bouton ("Tous") est sélectionné par défaut
+            
+            button.addEventListener("click", function () {
+                document.querySelectorAll(".filter").forEach(btn => btn.classList.remove("selected"));
+                this.classList.add("selected");
+                fetchWorksByCategory(this.dataset.categoryId || null);
+            });
+    
+            filterContainer.appendChild(button);
         });
-    });
-}
-
-    // Fonction pour créer un bouton de filtre et l'ajouter au conteneur des filtres
-    function createFilterButton(text, parent, categoryId) {
-        const button = document.createElement("button");
-        button.classList.add("filter");
-        if (!categoryId) button.classList.add("selected"); // Le bouton "Tous" est sélectionné par défaut
-        button.textContent = text;
-        if (categoryId) button.dataset.categoryId = categoryId; // Associe l'ID de catégorie au bouton si disponible
-        parent.appendChild(button);
-}
+    
+        // Ajoute les filtres juste avant la galerie dans le DOM
+        const gallery = document.querySelector(".gallery");
+        gallery.parentNode.insertBefore(filterContainer, gallery);
+    }
 
     // Fonction pour afficher les travaux dans la galerie
     function displayWorks(works) {
