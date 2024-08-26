@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(works => {
             allWorks = works; // Stock travaux récup
             displayWorks(works);
-            createFilters(works);
             updateLoginLogoutLink(); // Mettre à jour le lien de connexion/déconnexion après la création des filtres
         })
         .catch(error => console.error('Erreur lors de la récupération des travaux:', error));
@@ -38,69 +37,109 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fonction pour créer les filtres à partir des données récupérées
-    function createFilters(works) {
-        const divF = document.createElement("div");
-        divF.classList.add("Tfilter");
+   // Fonction pour récupérer les catégories depuis le localStorage ou l'API si elles sont expirées
+    function fetchCategories() {
+        const cachedCategories = localStorage.getItem('categories');
+        const expirationTime = localStorage.getItem('categoriesExpiration');
 
-        // Créer le filtre "Tous" en premier
-        createFilter("button", ["filter", "selected"], "Tous", divF);
-
-        // Utiliser un Set pour stocker les noms des catégories uniques
-        const categorySet = new Set();
-
-        // Créer les filtres pour chaque catégorie
-        works.forEach(work => {
-            if (!categorySet.has(work.category.name)) {
-                createFilter("button", ["filter"], work.category.name, divF);
-                categorySet.add(work.category.name);
-            }
-        });
-
-        // Ajouter divF au DOM, juste avant la galerie
-        gallery.parentNode.insertBefore(divF, gallery);
-
-        // Ajouter des écouteurs d'événements aux filtres
-        const filterList = document.querySelectorAll(".filter");
-
-        filterList.forEach((filterCategory) => {
-
-            filterCategory.addEventListener("click", function () {
-                // Enlever la classe "selected" de tous les filtres
-                filterList.forEach((btn) => btn.classList.remove("selected"));
-                
-                // Ajouter la classe "selected" au filtre cliqué
-                this.classList.add("selected");
-
-                // Récupère le nom de la catégorie à partir du texte filtre cliqué
-                const category = this.textContent;
-                let filteredWorks;
-
-                // Si la catégorie "tous" est sélectionné, affiche tous les travaux
-                if (category === "Tous") {
-                    filteredWorks = allWorks;
-                } 
-                // Sinon filtré travaux par catégorie avec nom de catégorie
-                else {
-                    filteredWorks = allWorks.filter(work => work.category.name === category);
-                }
-
-                // Appel de la fonction pour affiché travaux filtrés
-                displayWorks(filteredWorks);
-            });
-        });
+    // Si les catégories sont en cache et valides, on les retourne directement
+    if (cachedCategories && expirationTime && Date.now() < expirationTime) {
+        return Promise.resolve(JSON.parse(cachedCategories));
     }
 
-    // Fonction pour créer un filtre avec classe, contenu et l'attacher à un parent spécifié
-    function createFilter(balise, classes = [], contenu, parent) {
+    // Sinon, on va les chercher depuis l'API et on met à jour le cache
+    return fetch('http://localhost:5678/api/categories')
+        .then(response => {
+            if (!response.ok) throw new Error('Erreur lors de la récupération des catégories: ' + response.statusText);
+            return response.json();
+        })
+        .then(categories => {
+            // Stocke les catégories dans le localStorage avec une expiration de 24h
+            localStorage.setItem('categories', JSON.stringify(categories));
+            localStorage.setItem('categoriesExpiration', Date.now() + 86400000); // 24 heures en ms
+            return categories;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des catégories:', error);
+            return [];
+        });
+}
 
-        let filter = document.createElement(balise);
+    // Fonction pour récupérer les travaux en fonction de l'ID de la catégorie sélectionnée
+        function fetchWorksByCategory(categoryId) {
+        return fetch('http://localhost:5678/api/works')
+        .then(response => {
+            if (!response.ok) throw new Error('Erreur dans la récupération des travaux: ' + response.statusText);
+            return response.json();
+        })
+        .then(works => {
+            // Si un ID de catégorie est spécifié, on filtre les travaux en conséquence
+            if (categoryId) works = works.filter(work => work.categoryId == categoryId);
+            displayWorks(works); // Affiche les travaux dans la galerie
+        })
+        .catch(error => console.error('Erreur lors de la récupération des travaux:', error));
+}
 
-         // Ajouter chaque classe CSS fournie dans le tableau "classes" à l'élément créé
-        classes.forEach(classe => filter.classList.add(classe));
-        filter.textContent = contenu;
-        parent.appendChild(filter);
-    }
+    // Fonction pour créer les filtres à partir des catégories et les ajouter au DOM
+    function createFilters(categories) {
+        const filterContainer = document.createElement("div");
+        filterContainer.classList.add("Tfilter");
+
+    // Crée un filtre "Tous" pour afficher tous les travaux
+    createFilterButton("Tous", filterContainer, null);
+    
+    // Crée un bouton de filtre pour chaque catégorie
+    categories.forEach(category => createFilterButton(category.name, filterContainer, category.id));
+
+    // Ajoute les filtres juste avant la galerie dans le DOM
+    const gallery = document.querySelector(".gallery");
+        gallery.parentNode.insertBefore(filterContainer, gallery);
+
+    // Ajoute les listeners pour gérer les clics sur les filtres
+    document.querySelectorAll(".filter").forEach(btn => {
+        btn.addEventListener("click", function () {
+            // Enlève la classe "selected" de tous les filtres puis l'ajoute à celui qui est cliqué
+            document.querySelectorAll(".filter").forEach(btn => btn.classList.remove("selected"));
+            this.classList.add("selected");
+            fetchWorksByCategory(this.dataset.categoryId || null); // Récupère les travaux selon le filtre
+        });
+    });
+}
+
+    // Fonction pour créer un bouton de filtre et l'ajouter au conteneur des filtres
+    function createFilterButton(text, parent, categoryId) {
+        const button = document.createElement("button");
+        button.classList.add("filter");
+        if (!categoryId) button.classList.add("selected"); // Le bouton "Tous" est sélectionné par défaut
+        button.textContent = text;
+        if (categoryId) button.dataset.categoryId = categoryId; // Associe l'ID de catégorie au bouton si disponible
+        parent.appendChild(button);
+}
+
+    // Fonction pour afficher les travaux dans la galerie
+    function displayWorks(works) {
+        const gallery = document.querySelector(".gallery");
+        gallery.innerHTML = ''; // Vide la galerie existante
+
+    // Crée les éléments figure, img, et figcaption pour chaque travail et les ajoute à la galerie
+    works.forEach(work => {
+        const figure = document.createElement('figure');
+        figure.innerHTML = `<img src="${work.imageUrl}" alt="${work.title}"><figcaption>${work.title}</figcaption>`;
+        gallery.appendChild(figure);
+    });
+}
+
+    // Fonction d'initialisation de l'application
+    function initApp() {
+        fetchCategories().then(categories => {
+        createFilters(categories); // Crée les filtres avec les catégories récupérées
+        return fetchWorksByCategory(null); // Récupère tous les travaux au démarrage
+    }).catch(error => console.error('Erreur lors de l\'initialisation de l\'application:', error));
+}
+
+    //Lance l'application
+    initApp();
+
 
     // Fonction pour mettre à jour le lien de connexion/déconnexion
     function updateLoginLogoutLink() {
@@ -142,16 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUIForLoggedOutState(); // Mettre à jour l'interface utilisateur pour l'état déconnecté
     }
 
-    // Mise à jour de l'interface pour l'état déconnecté
-    function updateUIForLoggedOutState() {
-
-        // Mise à jour l'interface utilisateur ici sans recharger la page
-        const editControls = document.getElementById('edit-controls');
-
-        if (editControls) {
-            editControls.style.display = 'none';
-        }
-    }
 
      // Navigation vers la page de connexion
     function navigateToLogin(e) {
@@ -163,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayWorksWithoutCaptions(works, container) {
     // Vider le conteneur existant
     container.innerHTML = '';
-    // Parcourir les données reçues et créer les images avec légende
+    // Parcourir les données reçues et créer les images 
     works.forEach(work => {
         const figure = document.createElement('figure');
         const img = document.createElement('img');
@@ -216,9 +245,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Mise à jour de la galerie dans la modale
         const modalGallery = document.querySelector('.modal-gallery');
-            if (modalGallery) {
-            displayWorksWithoutCaptions(allWorks, modalGallery);
-        }
+        if (modalGallery) {
+        displayWorksWithoutCaptions(allWorks, modalGallery);
+    }
 
         // Afficher les travaux dans la modale
         function displayWorksInModal() {
@@ -300,52 +329,34 @@ document.addEventListener('DOMContentLoaded', () => {
     closeAddPhotoModalFunction(); // Ferme la modal
 });
 
-  // Ajouter un écouteur d'événement au bouton de fermeture de la modale principale 
-  if (closeModal) {
-    closeModal.addEventListener('click', closeAddPhotoModalFunction);
-}
-
     // Retour à la modale d'édition lorsque le bouton de retour est cliqué
     retourmodal.addEventListener('click', () => {
         addPhotoModal.style.display = 'none';
         editModal.style.display = 'block';
 });
 
-    // Remplissage du select des catégories dans la modale d'ajout de photo
+   // Fonction pour remplir dynamiquement le sélecteur de catégories
     function populateCategorySelect() {
-        const categories = [
-            { id: 1, name: "Objets" },
-            { id: 2, name: "Appartements" },
-            { id: 3, name: "Hotels & restaurants" }
-    ];
-
+    // Appel à la fonction pour récupérer les catégories
+    fetchCategories().then(categories => {
         const categorySelect = document.getElementById('photo-category');
-        categorySelect.innerHTML = '';
+        categorySelect.innerHTML = ''; // On vide d'abord toutes les options existantes dans le select
+
+        // Pour chaque catégorie récupérée, on crée une option dans le select
         categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category.id; // Définir l'ID de la catégorie comme valeur de l'option
-        option.textContent = category.name; // Définir le nom de la catégorie comme texte de l'option
-        categorySelect.appendChild(option); // Ajouter l'option au select
-});
+            const option = document.createElement('option');
+            option.value = category.id; // L'ID de la catégorie devient la valeur de l'option
+            option.textContent = category.name; // Le nom de la catégorie devient le texte affiché
+            categorySelect.appendChild(option); // On ajoute l'option au sélecteur
+        });
+    }).catch(error => {
+        // Gestion des erreurs, on affiche un message dans la console si ça ne marche pas
+        console.error('Erreur lors du chargement des catégories:', error);
+    });
 }
 
-     // Vérification du statut de connexion
-    function checkLoginStatus() {
-        const token = localStorage.getItem('token');
-        const editControls = document.getElementById('edit-controls');
-
-         // Si token présent et élément des contrôles d'édition existe, afficher contrôles
-        if (token && editControls) {
-            editControls.style.display = 'block';
-        }
-    }
-
-    // Mettre à jour le lien de connexion/déconnexion après le chargement du DOM
-    document.addEventListener('DOMContentLoaded', () => {
-        checkLoginStatus();
-        updateLoginLogoutLink(); // Mettre à jour l'état du lien de connexion/déconnexion
-    });
-    
+    // Appel de la fonction pour remplir le sélecteur dès le chargement de la page
+    populateCategorySelect();
 });
 
 // Sélection des éléments du DOM
@@ -399,7 +410,7 @@ let imageFile = null; // Variable pour stocker le fichier image
         e.preventDefault();
     
     const title = titleInput.value;
-    const category = categorySelect.value; // Convertir en entier
+    const category = parseInt(categorySelect.value);
 
      // Vérification que tous les champs sont remplis correctement
     if (!imageFile || !title || isNaN(category)) {
@@ -427,12 +438,19 @@ let imageFile = null; // Variable pour stocker le fichier image
         });
         
         if (response.ok) {
-            // Réinitialisation du formulaire et des éléments d'aperçu après un envoi réussi
+            const newWork = await response.json(); // Récupérer la réponse du serveur (le nouveau travail ajouté)
+            allWorks.push(newWork); // Ajouter le nouveau travail à la liste existante
+            displayWorks(allWorks); // Rafraîchir l'affichage de la galerie
+            displayWorksInModal(); // Mettre à jour l'affichage dans la modale
+
+            // Réinitialisation du formulaire
             addPhotoForm.reset();
-            photoPreview.src = '/FrontEnd/assets/images/image-regular.svg';
-            textp.style.display = 'none';
+            dynamicPhotoPreview.src = ''; // Réinitialiser l'aperçu de l'image
+            dynamicPhotoPreview.style.display = 'none';
+            textp.style.display = 'block';
+            addPhotoButton.style.display = 'block';
             errorDiv.style.display = 'none';
-            imageFile = null; // Réinitialiser l'image stockée
+            imageFile = null;
         } else {
             const errorText = await response.text(); // Récupérer le texte d'erreur
             console.error('Erreur lors de l’ajout de la photo:', errorText);
@@ -442,7 +460,7 @@ let imageFile = null; // Variable pour stocker le fichier image
     } catch (error) {
         // Gestion des erreurs de communication avec le serveur
         console.error('Erreur:', error);
-        errorDiv.textContent = "Une erreur s'est produite lors de la communication avec le serveur.";
         errorDiv.style.display = 'block';
     }
+
 });
