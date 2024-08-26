@@ -9,36 +9,32 @@ document.addEventListener('DOMContentLoaded', () => {
     let allWorks = [];
 
 
-    // Étape 1: Récupérer les données de l'API et afficher les images
+   // Étape 1: Récupérer les données de l'API et afficher les images
     fetch('http://localhost:5678/api/works')
-        .then(response => response.json())
-        .then(works => {
-            allWorks = works; // Stock travaux récup
-            displayWorks(works);
-            updateLoginLogoutLink(); // Mettre à jour le lien de connexion/déconnexion après la création des filtres
-        })
-        .catch(error => console.error('Erreur lors de la récupération des travaux:', error));
+    .then(response => response.json())
+    .then(works => {
+        allWorks = works; // Stocker les travaux récupérés
+        displayWorks(works); // Afficher les travaux dans la galerie
+        updateLoginLogoutLink(); // Mettre à jour le lien de connexion/déconnexion après la création des filtres
+    })
+    .catch(error => console.error('Erreur lors de la récupération des travaux:', error));
 
-    // Fonction pour afficher les travaux dans la galerie
-    function displayWorks(works) {
-        // Vider la galerie existante
-        gallery.innerHTML = '';
-         // Pour chaque travail, on crée une figure avec une image et une légende
-        works.forEach(work => {
-            const figure = document.createElement('figure');
-            const img = document.createElement('img');
-            const figcaption = document.createElement('figcaption');
-            img.src = work.imageUrl; // Défini source de l'image
-            img.alt = work.title;
-            figcaption.textContent = work.title;
-            figure.appendChild(img);
-            figure.appendChild(figcaption);
-            gallery.appendChild(figure); // Ajouter la figure à la galeri
-        });
+    // Fonction pour récupérer les travaux en fonction de la catégorie
+        function fetchWorksByCategory(categoryId) {
+            fetch('http://localhost:5678/api/works')
+                .then(response => response.json())
+                .then(works => {
+        // Si un ID de catégorie est spécifié, on filtre les travaux en conséquence
+        if (categoryId) {
+            works = works.filter(work => work.categoryId == categoryId);
+        }
+        displayWorks(works); // Affiche les travaux dans la galerie
+    })
+        .catch(error => console.error('Erreur lors de la récupération des travaux:', error));
     }
 
-   // Fonction pour récupérer les catégories depuis le localStorage ou l'API si elles sont expirées
-    function fetchCategories() {
+    // Fonction pour récupérer les catégories depuis le localStorage ou l'API si elles sont expirées
+        function fetchCategories() {
         const cachedCategories = localStorage.getItem('categories');
         const expirationTime = localStorage.getItem('categoriesExpiration');
 
@@ -50,9 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sinon, on va les chercher depuis l'API et on met à jour le cache
     return fetch('http://localhost:5678/api/categories')
         .then(response => {
-            if (!response.ok) throw new Error('Erreur lors de la récupération des catégories: ' + response.statusText);
-            return response.json();
-        })
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération des catégories: ' + response.statusText);
+            }
+        return response.json();
+    })
         .then(categories => {
             // Stocke les catégories dans le localStorage avec une expiration de 24h
             localStorage.setItem('categories', JSON.stringify(categories));
@@ -61,24 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Erreur lors de la récupération des catégories:', error);
-            return [];
+            return []; // Retourner un tableau vide en cas d'erreur
         });
-}
-
-    // Fonction pour récupérer les travaux en fonction de l'ID de la catégorie sélectionnée
-        function fetchWorksByCategory(categoryId) {
-        return fetch('http://localhost:5678/api/works')
-        .then(response => {
-            if (!response.ok) throw new Error('Erreur dans la récupération des travaux: ' + response.statusText);
-            return response.json();
-        })
-        .then(works => {
-            // Si un ID de catégorie est spécifié, on filtre les travaux en conséquence
-            if (categoryId) works = works.filter(work => work.categoryId == categoryId);
-            displayWorks(works); // Affiche les travaux dans la galerie
-        })
-        .catch(error => console.error('Erreur lors de la récupération des travaux:', error));
-}
+    }
 
     // Fonction pour créer les filtres à partir des catégories et les ajouter au DOM
     function createFilters(categories) {
